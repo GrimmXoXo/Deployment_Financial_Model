@@ -2,6 +2,9 @@ from sklearn.pipeline import Pipeline
 from src.Custom_Transformers import (OutlierCapper, DataFrameImputer,DF_cube_root_transform, DataFrameScaler, DF_log_transform, DataFrameVarianceThreshold, FeatureSelector)
 from src.utils import load_config
 from sklearn.impute import SimpleImputer
+# import os
+# print(os.getcwd())
+
 
 # Load the configuration
 config = load_config('config/config.yaml')
@@ -17,7 +20,6 @@ class PreprocessingPipeline:
             ('constant_filter', DataFrameVarianceThreshold()),
             ('outlier_capper', OutlierCapper()),
             ('cube_root_transform', DF_cube_root_transform()),
-            
             ('scaler', DataFrameScaler()), 
             ('feature_selector', FeatureSelector(threshold=threshold))
         ])

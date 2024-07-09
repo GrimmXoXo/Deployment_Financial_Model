@@ -2,7 +2,11 @@ from imblearn.combine import SMOTEENN
 import pandas as pd
 from typing import Tuple
 
-class Resample:    
+class Resample:
+    '''
+    Class for resampling the data
+    '''
+ 
     def __init__(self, X: pd.DataFrame, y: pd.Series):
         self.X = X
         self.y = y
