@@ -6,3 +6,5 @@ from . import model_evaluation
 from . import model_training
 from . import Orchestrator
 from . import utils
+
+__version__ = "1.0.3"
