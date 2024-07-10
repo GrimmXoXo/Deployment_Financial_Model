@@ -1,4 +1,4 @@
-name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
+name: Publish Python distribution to PyPI and TestPyPI
 
 on:
   release:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Build distribution 📦
+    name: Build distribution
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,6 +22,7 @@ jobs:
         run: |
           cd Project
           python3 -m build
+          ls -R dist/  # This will list the contents of the dist directory
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
@@ -29,47 +30,53 @@ jobs:
           path: Project/dist/
 
   publish-to-pypi:
-    name: Publish Python 🐍 distribution 📦 to PyPI
-    if: startsWith(github.ref, 'refs/tags/') # only publish to PyPI on tag pushes
+    name: Publish Python distribution to PyPI
+    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
     needs:
       - build
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/financial_model_taiwan # Replace with your PyPI project name
+      url: https://pypi.org/p/financial_model_taiwan  # Replace with your PyPI project name
     permissions:
-      id-token: write # IMPORTANT: mandatory for trusted publishing
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
       - name: Download all the dists
         uses: actions/download-artifact@v3
         with:
           name: python-package-distributions
-          path: Project/dist/
-      - name: Publish distribution 📦 to PyPI
+          path: dist/
+      - name: List contents of dist directory
+        run: ls -R dist/
+      - name: Check distribution files
+        run: |
+          python3 -m pip install --upgrade twine
+          python3 -m twine check dist/*
+      - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages_dir: Project/dist/
+          packages_dir: dist/
 
   github-release:
-    name: Sign the Python 🐍 distribution 📦 with Sigstore and upload them to GitHub Release
+    name: Sign the Python distribution with Sigstore and upload them to GitHub Release
     needs:
       - publish-to-pypi
     runs-on: ubuntu-latest
     permissions:
-      contents: write # IMPORTANT: mandatory for making GitHub Releases
-      id-token: write # IMPORTANT: mandatory for sigstore
+      contents: write  # IMPORTANT: mandatory for making GitHub Releases
+      id-token: write  # IMPORTANT: mandatory for sigstore
     steps:
       - name: Download all the dists
         uses: actions/download-artifact@v3
         with:
           name: python-package-distributions
-          path: Project/dist/
+          path: dist/
       - name: Sign the dists with Sigstore
         uses: sigstore/gh-action-sigstore-python@v2.1.1
         with:
           inputs: |
-            ./Project/dist/*.tar.gz
-            ./Project/dist/*.whl
+            ./dist/*.tar.gz
+            ./dist/*.whl
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -79,25 +86,32 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          gh release upload '${{ github.ref_name }}' Project/dist/** --repo '${{ github.repository }}'
+          gh release upload '${{ github.ref_name }}' dist/** --repo '${{ github.repository }}'
 
   publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
+    name: Publish Python distribution to TestPyPI
     needs:
       - build
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/financial_model_taiwan # Replace with your TestPyPI project name
+      url: https://test.pypi.org/p/financial_model_taiwan  # Replace with your TestPyPI project name
     permissions:
-      id-token: write # IMPORTANT: mandatory for trusted publishing
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
       - name: Download all the dists
         uses: actions/download-artifact@v3
         with:
           name: python-package-distributions
-          path: Project/dist/
-      - name: Publish distribution 📦 to TestPyPI
+          path: dist/
+      - name: List contents of dist directory
+        run: ls -R dist/
+      - name: Check distribution files
+        run: |
+          python3 -m pip install --upgrade twine
+          python3 -m twine check dist/*
+      - name: Publish distribution to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages_dir: Project/dist/
+          repository-url: https://test.pypi.org/legacy/
+          packages_dir: dist/
