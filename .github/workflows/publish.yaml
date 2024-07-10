@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Install pypa/build
+      - name: Install build tools
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install build --user
@@ -22,7 +22,7 @@ jobs:
         run: |
           cd Project
           python3 -m build
-          ls -R dist/  # This will list the contents of the dist directory
+          ls -R dist/  # List contents of the dist directory
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
