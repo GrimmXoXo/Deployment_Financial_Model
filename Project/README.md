@@ -75,3 +75,54 @@ evaluation_results = pipeline.evaluate_model()
 print(evaluation_results)
 
 ```
+
+## `FinModel` Class Attributes
+
+- `data_path`: Path to the CSV file containing the dataset.
+- `target_column`: The target column name for prediction.
+- `model_path`: Path to the pre-trained model file (optional).
+- `pipeline`: The preprocessing pipeline.
+- `trainer`: The model trainer.
+- `X_train`: Training features.
+- `X_test`: Testing features.
+- `y_train`: Training labels.
+- `y_test`: Testing labels.
+- `X_train_transformed`: Transformed training features after preprocessing.
+- `X_test_transformed`: Transformed testing features after preprocessing.
+- `X_resampled`: Resampled training features to handle class imbalance.
+- `y_resampled`: Resampled training labels to handle class imbalance.
+
+### Example Workflow
+
+```python
+from financial_model_taiwan.Orchestrator import FinModel
+
+pipeline = FinModel(data_path='../data/data.csv', model_path='../models/trained_model.bin', target_column='Bankrupt?')
+pipeline.data_ingestion()
+pipeline.data_preprocessing()
+pipeline.data_resampling()
+pipeline.train_model()
+pipeline.save_model('trained_model_new.bin')
+pipeline.load_model()
+evaluation_results = pipeline.evaluate_model()
+print(evaluation_results)
+
+# Accessing Attributes
+print(pipeline.X)
+print(pipeline.y)
+print(pipeline.X_test_transformed)
+print(pipeline.X_train_transformed)
+print(pipeline.X_resampled)
+print(pipeline.y_resampled)
+
+```
+
+## To check the predicted values
+
+Although we didn't explicitly create a method we can call it using
+
+```python
+
+pipeline.trainer.stacked_model.predict(pipeline.X_test_transformed)
+
+```
