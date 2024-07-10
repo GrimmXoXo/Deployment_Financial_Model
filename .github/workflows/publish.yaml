@@ -8,7 +8,6 @@ jobs:
   build:
     name: Build distribution 📦
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -31,16 +30,15 @@ jobs:
 
   publish-to-pypi:
     name: Publish Python 🐍 distribution 📦 to PyPI
-    if: startsWith(github.ref, 'refs/tags/')  # only publish to PyPI on tag pushes
+    if: startsWith(github.ref, 'refs/tags/') # only publish to PyPI on tag pushes
     needs:
-    - build
+      - build
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/financial_model_taiwan  # Replace with your PyPI project name
+      url: https://pypi.org/p/financial_model_taiwan # Replace with your PyPI project name
     permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
-
+      id-token: write # IMPORTANT: mandatory for trusted publishing
     steps:
       - name: Download all the dists
         uses: actions/download-artifact@v3
@@ -49,20 +47,17 @@ jobs:
           path: Project/dist/
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        env:
-          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        with:
+          packages_dir: Project/dist/
 
   github-release:
     name: Sign the Python 🐍 distribution 📦 with Sigstore and upload them to GitHub Release
     needs:
-    - publish-to-pypi
+      - publish-to-pypi
     runs-on: ubuntu-latest
-
     permissions:
-      contents: write  # IMPORTANT: mandatory for making GitHub Releases
-      id-token: write  # IMPORTANT: mandatory for sigstore
-
+      contents: write # IMPORTANT: mandatory for making GitHub Releases
+      id-token: write # IMPORTANT: mandatory for sigstore
     steps:
       - name: Download all the dists
         uses: actions/download-artifact@v3
@@ -89,16 +84,13 @@ jobs:
   publish-to-testpypi:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
     needs:
-    - build
+      - build
     runs-on: ubuntu-latest
-
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/financial_model_taiwan  # Replace with your TestPyPI project name
-
+      url: https://test.pypi.org/p/financial_model_taiwan # Replace with your TestPyPI project name
     permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
-
+      id-token: write # IMPORTANT: mandatory for trusted publishing
     steps:
       - name: Download all the dists
         uses: actions/download-artifact@v3
@@ -108,7 +100,4 @@ jobs:
       - name: Publish distribution 📦 to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          repository-url: https://test.pypi.org/legacy/
-        env:
-          TWINE_USERNAME: ${{ secrets.TEST_PYPI_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_PASSWORD }}
+          packages_dir: Project/dist/
