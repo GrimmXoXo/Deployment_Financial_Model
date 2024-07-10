@@ -1,0 +1,15 @@
+CustomTransformers:
+  thresholds : {
+    'high': 0.02,
+    'medium': 0.01,
+    'low': 0.005,
+  }
+
+  alpha: 100.0
+
+data:
+  raw_path: ../data/data.csv/
+  processed_path: ../data/processed.csv/
+
+ModelArchitecture:
+  threshold: 0.6804994261053934

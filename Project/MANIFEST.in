@@ -1,0 +1,8 @@
+include README.md
+include LICENSE
+include requirements.txt
+include data/docs/ModelArchitecture.png
+include src/*.py
+recursive-include src *.py
+include financial_model_taiwan/config/config.yaml
+
