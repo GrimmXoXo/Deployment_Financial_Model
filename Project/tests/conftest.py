@@ -1,11 +1,11 @@
-# tests/conftest.py
-import pytest
-import os
-import sys
+# # conftest.py
+# import os
+# import sys
 
-@pytest.fixture(scope='session', autouse=True)
-def set_project_root():
-    project_root = os.path.abspath(os.path.join(os.getcwd()))
-    if project_root not in sys.path:
-        sys.path.append(project_root)
-    os.chdir(project_root)
+# # Get the directory containing this file
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# # Add the parent directory of 'tests' (which should contain 'src') to sys.path
+# project_root = os.path.dirname(current_dir)
+# src_dir = os.path.join(project_root, 'src')
+# sys.path.insert(0, src_dir)

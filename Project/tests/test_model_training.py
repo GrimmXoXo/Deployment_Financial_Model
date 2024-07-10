@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from src.Orchestrator import FinModel  
+from financial_model_taiwan.Orchestrator import FinModel  
 
 @pytest.fixture
 def pipeline():

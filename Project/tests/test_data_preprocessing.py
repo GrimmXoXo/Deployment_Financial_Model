@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import pytest
-from src.data_preprocessing import PreprocessingPipeline
+from financial_model_taiwan.data_preprocessing import PreprocessingPipeline
 
 @pytest.fixture(scope="module")
 def preprocessed_data():
