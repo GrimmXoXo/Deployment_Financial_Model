@@ -23,6 +23,12 @@ jobs:
           cd Project
           python3 -m build
           ls -R dist/  # List contents of the dist directory
+      - name: Debug build output
+        run: |
+          echo "Listing contents of Project:"
+          ls -R Project
+          echo "Listing contents of Project/dist:"
+          ls -R Project/dist
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
@@ -46,6 +52,10 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
+      - name: Debug download output
+        run: |
+          echo "Listing contents of dist:"
+          ls -R dist
       - name: List contents of dist directory
         run: ls -R dist/
       - name: Check distribution files
@@ -104,6 +114,10 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
+      - name: Debug download output
+        run: |
+          echo "Listing contents of dist:"
+          ls -R dist
       - name: List contents of dist directory
         run: ls -R dist/
       - name: Check distribution files
